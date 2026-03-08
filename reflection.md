@@ -4,7 +4,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 
 ## 1. What was broken when you started?
 
-When I first ran the game, it appeared to work on the surface — it accepted input and showed messages — but the hints were completely wrong and the score behaved strangely. After digging in, I found multiple bugs that made the game unplayable and untrustworthy.
+When I first ran the game, it appeared to work on the surface — it accepted input and showed messages — but the hints were completely wrong and the score behaved strangely. After digging in, I found multiple bugs that made the game unplayable.
 
 **Bug 1: The hints were backwards**
 I expected that guessing too low (like entering `0`) would tell me to go higher. Instead, the game said "📉 Go LOWER!" — which is the opposite of what I needed. The `check_guess` function had the messages swapped: when `guess > secret` it said "Go HIGHER!" and when `guess < secret` it said "Go LOWER!", both pointing the player in the wrong direction every single time.
@@ -14,6 +14,7 @@ I expected the instruction text to say something like "Guess a number between 1 
 
 **Bug 3: After winning or losing, the New Game button did nothing**
 I expected clicking "New Game 🔁" after a completed round to reset the game and let me play again. Instead, the game stayed frozen on the win or loss screen no matter how many times I clicked it. The issue was that the `status` field in session state was never reset — it stayed `"won"` or `"lost"` even after the new game started, so the app immediately hit `st.stop()` on every rerun and blocked all input.
+
 
 ---
 

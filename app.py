@@ -1,5 +1,6 @@
 import random
 import streamlit as st
+from logic_utils import parse_guess, check_guess, update_score
 
 def get_range_for_difficulty(difficulty: str):
     if difficulty == "Easy":
@@ -103,6 +104,9 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "last_hint" not in st.session_state:
+    st.session_state.last_hint = None
+
 st.subheader("Make a guess")
 
 st.info(
@@ -134,6 +138,7 @@ if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(low, high)  # BUG FIX: was randint(1, 100), ignored difficulty range
     st.session_state.status = "playing"                  # BUG FIX: status was never reset, game stayed stuck after win/loss
+    st.session_state.last_hint = None
     st.success("New game started.")
     st.rerun()
 
@@ -160,8 +165,10 @@ if submit:
 
         outcome, message = check_guess(guess_int, secret)
 
-        if show_hint:
-            st.warning(message)
+        # BUG FIX: hint was only shown inside `if submit:`, so toggling the checkbox
+        # after a guess triggered a rerun but never re-displayed the hint. Fix: store
+        # the hint in session state so it can be rendered on any rerun.
+        st.session_state.last_hint = message
 
         st.session_state.score = update_score(
             current_score=st.session_state.score,
@@ -184,6 +191,9 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+
+if show_hint and st.session_state.last_hint:
+    st.warning(st.session_state.last_hint)
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
