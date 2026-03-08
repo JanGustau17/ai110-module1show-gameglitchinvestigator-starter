@@ -51,6 +51,7 @@ The game is a number-guessing game where you guess a secret number within limite
 ## 📸 Demo
 
 - [ ] [Insert a screenshot of your fixed, winning game here]
+![alt text](image-1.png)
 ![alt text](image.png)
 
 
